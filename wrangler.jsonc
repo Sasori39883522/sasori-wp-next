@@ -1,0 +1,16 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "main": ".open-next/worker.js",
+  "name": "sasori-wp-next",
+  "compatibility_date": "2026-01-16",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "vars": {
+    "WORDPRESS_URL": "https://public-api.wordpress.com/wp/v2/sites/sasori39883522.wordpress.com"
+  }
+}

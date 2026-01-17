@@ -1,10 +1,4 @@
-import {
-  getPostBySlug,
-  getFeaturedMediaById,
-  getAuthorById,
-  getCategoryById,
-  getAllPostSlugs,
-} from "@/lib/wordpress";
+import { getPostBySlug, getFeaturedMediaById, getAuthorById, getCategoryById, getAllPostSlugs } from "@/lib/wordpress";
 import { generateContentMetadata, stripHtml } from "@/lib/metadata";
 
 import { Section, Container, Article, Prose } from "@/components/craft";
@@ -19,11 +13,7 @@ export async function generateStaticParams() {
   return await getAllPostSlugs();
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const post = await getPostBySlug(slug);
 
@@ -39,11 +29,7 @@ export async function generateMetadata({
   });
 }
 
-export default async function Page({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const post = await getPostBySlug(slug);
 
@@ -51,10 +37,8 @@ export default async function Page({
     notFound();
   }
 
-  const featuredMedia = post.featured_media
-    ? await getFeaturedMediaById(post.featured_media)
-    : null;
-  const author = await getAuthorById(post.author);
+  const featuredMedia = post.featured_media ? await getFeaturedMediaById(post.featured_media) : null;
+  const author = await getAuthorById(post.author).catch((e) => null);
   const date = new Date(post.date).toLocaleDateString("en-US", {
     month: "long",
     day: "numeric",
@@ -67,14 +51,12 @@ export default async function Page({
       <Container>
         <Prose>
           <h1>
-            <span
-                dangerouslySetInnerHTML={{ __html: post.title.rendered }}
-              ></span>
+            <span dangerouslySetInnerHTML={{ __html: post.title.rendered }}></span>
           </h1>
           <div className="flex justify-between items-center gap-4 text-sm mb-4">
             <h5>
-              Published {date} by{" "}
-              {author.name && (
+              Published {date} {author && "by "}
+              {author && author.name && (
                 <span>
                   <a href={`/posts/?author=${author.id}`}>{author.name}</a>{" "}
                 </span>
@@ -83,10 +65,7 @@ export default async function Page({
 
             <Link
               href={`/posts/?category=${category.id}`}
-              className={cn(
-                badgeVariants({ variant: "outline" }),
-                "no-underline!"
-              )}
+              className={cn(badgeVariants({ variant: "outline" }), "no-underline!")}
             >
               {category.name}
             </Link>
@@ -94,11 +73,7 @@ export default async function Page({
           {featuredMedia?.source_url && (
             <div className="h-96 my-12 md:h-[500px] overflow-hidden flex items-center justify-center border rounded-lg bg-accent/25">
               {/* eslint-disable-next-line */}
-              <img
-                className="w-full h-full object-cover"
-                src={featuredMedia.source_url}
-                alt={post.title.rendered}
-              />
+              <img className="w-full h-full object-cover" src={featuredMedia.source_url} alt={post.title.rendered} />
             </div>
           )}
         </Prose>
