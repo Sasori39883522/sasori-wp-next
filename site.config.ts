@@ -6,6 +6,6 @@ type SiteConfig = {
 
 export const siteConfig: SiteConfig = {
   site_name: "サソリ",
-  site_description: "I write what I want",
+  site_description: "@sasori39883522's blog. Hinatazaka46, English subs, etc.",
   site_domain: "https://sasori-wp-next.sasori39883522.workers.dev",
 };
